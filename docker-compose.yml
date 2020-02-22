@@ -5,13 +5,14 @@ services:
     container_name: golang-api
     build: '.'
     environment:
-      REDIS_HOST: redis
+      PORT: 8800
+      REDIS_HOST: cache
       POSTGRES_HOST: db
       POSTGRES_DB: go_api
       POSTGRES_PASSWD: postgres
     depends_on:
       - db
-      - redis 
+      - cache 
     ports:
       - '8800:8800'
     restart: always   
@@ -25,10 +26,12 @@ services:
       POSTGRES_DB: go_api  
     ports:
       - '5432:5432'
+    volumes:
+      - ./db/000001_create_db_initial.up.sql:/docker-entrypoint-initdb.d/000001_create_db_initial.up.sql
     restart: always
 
-  redis:
-    container_name: redis
+  cache:
+    container_name: cache
     image: redis:latest    
     ports:
       - '6379:6379'

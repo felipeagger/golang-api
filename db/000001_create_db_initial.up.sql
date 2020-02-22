@@ -1,6 +1,6 @@
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
-CREATE TABLE public.users (
+CREATE TABLE IF NOT EXISTS public.users (
 	id uuid NOT NULL DEFAULT uuid_generate_v4(),
 	username varchar(150) NOT NULL,
 	age int4 NULL,

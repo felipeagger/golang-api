@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 	"time"
 
 	"database/sql"
@@ -10,9 +11,9 @@ import (
 )
 
 func ConectDB() (*sql.DB, error) {
-	dbHost := "localhost"  //os.Getenv("POSTGRES_HOST")
-	dbName := "go_api"     //os.Getenv("POSTGRES_DB")
-	dbPasswd := "postgres" //os.Getenv("POSTGRES_PASSWD")
+	dbHost := os.Getenv("POSTGRES_HOST")
+	dbName := os.Getenv("POSTGRES_DB")
+	dbPasswd := os.Getenv("POSTGRES_PASSWD")
 
 	urlConection := fmt.Sprintf("host=%s port=5432 user=postgres dbname=%s password=%s sslmode=disable",
 		dbHost, dbName, dbPasswd)

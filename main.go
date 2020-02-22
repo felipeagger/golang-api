@@ -1,6 +1,8 @@
 package main
 
 import (
+	"os"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -20,6 +22,6 @@ func main() {
 	router.PUT("/users/:username", putUsers)
 	router.DELETE("/users/:username", deleteUsers)
 
-	router.Run(":8800") //  + os.Getenv("PORT")
+	router.Run(":" + os.Getenv("PORT"))
 
 }

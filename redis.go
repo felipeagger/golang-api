@@ -3,15 +3,16 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"os"
 
 	"github.com/go-redis/redis"
 )
 
 func NewRedisClient() (*redis.Client, error) {
 	client := redis.NewClient(&redis.Options{
-		Addr:     "127.0.0.1:6379", //os.Getenv("REDIS_HOST") +
-		Password: "",               // no password set
-		DB:       0,                // use default DB
+		Addr:     os.Getenv("REDIS_HOST") + ":6379",
+		Password: "", // no password set
+		DB:       0,  // use default DB
 	})
 
 	_, err := client.Ping().Result()
