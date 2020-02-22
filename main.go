@@ -15,10 +15,11 @@ func main() {
 	})
 
 	router.GET("/users", getUsers)
+	router.GET("/users/:username", getUser)
 	router.POST("/users", postUsers)
 	router.PUT("/users/:username", putUsers)
 	router.DELETE("/users/:username", deleteUsers)
 
-	router.Run(":8800")
+	router.Run(":8800") //  + os.Getenv("PORT")
 
 }

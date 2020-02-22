@@ -9,9 +9,9 @@ import (
 
 func NewRedisClient() (*redis.Client, error) {
 	client := redis.NewClient(&redis.Options{
-		Addr:     "redis:6379",
-		Password: "", // no password set
-		DB:       0,  // use default DB
+		Addr:     "127.0.0.1:6379", //os.Getenv("REDIS_HOST") +
+		Password: "",               // no password set
+		DB:       0,                // use default DB
 	})
 
 	_, err := client.Ping().Result()
@@ -24,21 +24,21 @@ func NewRedisClient() (*redis.Client, error) {
 	return client, nil
 }
 
-func MarshalBinary(user User) ([]byte, error) {
-	return json.Marshal(user)
+func MarshalBinary(users []User) ([]byte, error) {
+	return json.Marshal(users)
 }
 
-func UnmarshalBinary(user string) User {
-	var _user User
+func UnmarshalBinary(users string) []User {
+	var _user []User
 
-	if err := json.Unmarshal([]byte(user), &_user); err != nil {
+	if err := json.Unmarshal([]byte(users), &_user); err != nil {
 		fmt.Println("Error: ", err)
 	}
 
 	return _user
 }
 
-func RedisSet(key string, value User) {
+func RedisSet(key string, value []User) {
 	client, _ := NewRedisClient()
 
 	json, error := MarshalBinary(value)
@@ -54,14 +54,16 @@ func RedisSet(key string, value User) {
 	}
 }
 
-func RedisGet(key string) User {
+func RedisGet(key string) []User {
 	client, _ := NewRedisClient()
 
 	value, err := client.Get(key).Result()
 	if err != nil {
-		panic(err)
+		//panic(err)
+		return nil
+	} else {
+		fmt.Println(key, UnmarshalBinary(value))
+		return UnmarshalBinary(value)
 	}
 
-	fmt.Println(key, UnmarshalBinary(value))
-	return UnmarshalBinary(value)
 }

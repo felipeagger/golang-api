@@ -5,48 +5,62 @@ import (
 )
 
 func getUsers(c *gin.Context) {
-	var users = RedisGet("users")
 
-	c.JSON(200, gin.H{
-		"users": users,
-	})
+	if usersCache := RedisGet("all_users"); usersCache != nil {
+		c.JSON(200, usersCache)
+		return
+	}
+
+	users := SelectAllUsers()
+
+	c.JSON(200, users)
+}
+
+func getUser(c *gin.Context) {
+
+	username := c.Param("username")
+	user := SelectUser(username)
+
+	c.JSON(200, user)
 }
 
 func postUsers(c *gin.Context) {
 
 	var user User
+	if err := c.ShouldBindJSON(&user); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
 
-	c.BindJSON(&user)
+	user = Create(user)
 
-	RedisSet("users", user)
-
-	c.JSON(201, gin.H{
-		"user": user,
-	})
+	c.JSON(201, user)
 }
 
 func putUsers(c *gin.Context) {
 	username := c.Param("username")
 
 	var user User
-	c.BindJSON(&user)
+	if err := c.ShouldBindJSON(&user); err != nil {
+		c.JSON(400, gin.H{"error": err.Error()})
+		return
+	}
 
 	user.Username = username
 
-	RedisSet("users", user)
+	rowsAffected := Update(user)
 
 	c.JSON(200, gin.H{
-		"user": user,
+		"rows_affected": rowsAffected,
 	})
 }
 
 func deleteUsers(c *gin.Context) {
 	username := c.Param("username")
 
-	var user User
-	RedisSet("users", user)
+	rowsAffected := Delete(username)
 
 	c.JSON(200, gin.H{
-		"username": username,
+		"rows_affected": rowsAffected,
 	})
 }
