@@ -25,10 +25,15 @@ Deixar as Porta (8800, 5432, 6379) do seu host local livre, pois serão essas po
 Golang API = http://127.0.0.1:8800/
 
 GET http://127.0.0.1:8800/users
+
 GET http://127.0.0.1:8800/users/:username
+
 POST http://127.0.0.1:8800/users
+
 PUT http://127.0.0.1:8800/users/:username
+
 DELETE http://127.0.0.1:8800/users/:username
+
 
 # Links/Observações
 
